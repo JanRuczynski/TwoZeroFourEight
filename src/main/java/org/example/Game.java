@@ -1,39 +1,78 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Random;
+
 public class Game {
     private int dimension;
+    private int[][] gameField;
+    private boolean gameOver;
 
-    public Game(int dimension) {
+    public Game(int dimension) throws IOException {
         this.dimension = dimension;
+        play();
     }
 
-    public void setDimension(int dimension) {
-        this.dimension = dimension;
+    public void play() throws IOException {
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(System.in));
+        System.out.println("###   Please input game dimension (between 2 and 8)   ###");
+        dimension = Integer.parseInt(reader.readLine());
+        initialize();
+        while (!gameOver) {
+            addNewNumber();
+
+        }
     }
 
-    public int getDimension() {
-        return dimension;
+    private void addNewNumber() {
+        Random random = new Random();
+        int addedNumber = 2;
+        boolean isSet = false;
+        if (random.nextInt(8) == 4) {
+            addedNumber = 4;
+        }
+        while (!isSet) {
+            int randX = random.nextInt(1, dimension) - 1;
+            int randY = random.nextInt(1, dimension) - 1;
+            if (gameField[randY][randX] == 0) {
+                gameField[randY][randX] = addedNumber;
+                isSet = true;
+            }
+        }
     }
 
-    public void hmtlize() {
-        String[] output = new String[getDimension()*4+1];
+    private void initialize() {
+        gameField = new int[dimension][dimension];
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                gameField[i][j] = 0;
+            }
+        }
+        gameOver = false;
+    }
+
+    private void hmtlize() {
+        String[] output = new String[dimension*4+1];
         output[0] = "+";
-        for (int w = 0; w < getDimension(); w++) {
+        for (int w = 0; w < dimension; w++) {
             output[0] = output[0].concat("-------+");
         }
-        for (int h = 0; h < getDimension(); h++) {
+        for (int h = 0; h < dimension; h++) {
             output[h*4+1] = "|";
             output[h*4+2] = "|";
             output[h*4+3] = "|";
             output[(h+1)*4] = "+";
-            for (int w = 0; w < getDimension(); w++) {
+            for (int w = 0; w < dimension; w++) {
                 output[h*4+1] = output[h*4+1].concat("       |");
                 output[h*4+2] = output[h*4+2].concat(insertNumber(h,w)).concat("|");
                 output[h*4+3] = output[h*4+3].concat("       |");
                 output[(h+1)*4] = output[(h+1)*4].concat("-------+");
             }
         }
-        for (int h = 0; h < getDimension()*4+1; h++) {
+        for (int h = 0; h < dimension*4+1; h++) {
             System.out.println(output[h]);
         }
     }
