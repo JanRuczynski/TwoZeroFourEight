@@ -18,12 +18,27 @@ public class Game {
     public void play() throws IOException {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(System.in));
-        System.out.println("###   Please input game dimension (between 2 and 8)   ###");
+        System.out.println("###   Please enter game dimension (between 2 and 8)   ###");
         dimension = Integer.parseInt(reader.readLine());
         initialize();
         while (!gameOver) {
             addNewNumber();
+            hmtlize();
+            System.out.println("###   Please enter direction   ###");
+            char direction = reader.readLine().charAt(0);
+            move(direction);
+        }
+    }
 
+    private void move(char direction) {
+        int[][] rotatedField = new int[dimension][dimension];
+        switch (direction) {
+            case 'w' :
+                for (int h = 0; h < dimension; h++) {
+                    for (int w = 0; w < dimension; w++) {
+                        rotatedField[dimension - h - 1][dimension - w - 1] = gameField[h][w];
+                    }
+                }
         }
     }
 
@@ -78,6 +93,48 @@ public class Game {
     }
 
     private String insertNumber(int h, int w) {
-        return " teest ";
+        int number = gameField[h][w];
+        int numberLength = String.valueOf(number).length();
+        String output = switch (numberLength) {
+            case 1 -> String.format("   %d   ", number);
+            case 2 -> String.format("  %d   ", number);
+            case 3 -> String.format("  %d  ", number);
+            case 4 -> String.format(" %d  ", number);
+            default -> "";
+        };
+        return output;
+    }
+
+    private int[][] rotate(int[][] initialArray, char direction) {
+        int[][] rotatedField = new int[dimension][dimension];
+        switch (direction) {
+            case 'w' :
+                for (int h = 0; h < dimension; h++) {
+                    for (int w = 0; w < dimension; w++) {
+                        rotatedField[dimension - h - 1][dimension - w - 1] = gameField[h][w];
+                    }
+                }
+                break;
+            case 'd' :
+                for (int h = 0; h < dimension; h++) {
+                    for (int w = 0; w < dimension; w++) {
+                        rotatedField[w][dimension-h-1] = gameField[h][w];
+                    }
+                }
+                break;
+            case 's' :
+                for (int h = 0; h < dimension; h++) {
+                    System.arraycopy(gameField[h], 0, rotatedField[h], 0, dimension);
+                }
+                break;
+            case 'a' :
+                for (int h = 0; h < dimension; h++) {
+                    for (int w = 0; w < dimension; w++) {
+                        rotatedField[dimension-w-1][h] = gameField[h][w];
+                    }
+                }
+                break;
+        }
+        return rotatedField;
     }
 }
