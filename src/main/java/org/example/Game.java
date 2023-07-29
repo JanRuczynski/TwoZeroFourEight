@@ -32,13 +32,17 @@ public class Game {
 
     private void move(char direction) {
         int[][] rotatedField = new int[dimension][dimension];
-        switch (direction) {
-            case 'w' :
-                for (int h = 0; h < dimension; h++) {
-                    for (int w = 0; w < dimension; w++) {
-                        rotatedField[dimension - h - 1][dimension - w - 1] = gameField[h][w];
-                    }
+        rotatedField = rotate(gameField, direction);
+        for (int h = 0; h < dimension - 1; h++) {
+            for (int w = 0; w < dimension; w++) {
+                if (rotatedField[h][w] == rotatedField[h+1][w]) {
+                    rotatedField[h][w] = 0;
+                    rotatedField[h+1][w]*=2;
+                } else if (rotatedField[h+1][w] == 0) {
+                    rotatedField[h+1][w] = rotatedField[h][w];
+                    rotatedField[h][w] = 0;
                 }
+            }
         }
     }
 
@@ -95,14 +99,13 @@ public class Game {
     private String insertNumber(int h, int w) {
         int number = gameField[h][w];
         int numberLength = String.valueOf(number).length();
-        String output = switch (numberLength) {
+        return switch (numberLength) {
             case 1 -> String.format("   %d   ", number);
             case 2 -> String.format("  %d   ", number);
             case 3 -> String.format("  %d  ", number);
             case 4 -> String.format(" %d  ", number);
             default -> "";
         };
-        return output;
     }
 
     private int[][] rotate(int[][] initialArray, char direction) {
