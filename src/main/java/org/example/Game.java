@@ -24,8 +24,11 @@ public class Game {
         while (!gameOver) {
             addNewNumber();
             hmtlize();
-            System.out.println("###   Please enter direction   ###");
-            char direction = reader.readLine().charAt(0);
+            char direction = 0;
+            while (direction != 'w' && direction != 's' && direction != 'a' && direction != 'd') {
+                System.out.println("###   Please enter direction (w, s, a or d)   ###");
+                direction = reader.readLine().charAt(0);
+            }
             move(direction);
         }
     }
@@ -47,7 +50,7 @@ public class Game {
                 }
             }
         }
-        
+
         switch (direction) {
             case 'w' -> invertedDirection = 'w';
             case 's' -> invertedDirection = 's';
