@@ -9,7 +9,7 @@ public class Main {
 //        game.gameField = new int[][]{{1,22,333}, {22,22,22}, {333,333,333}};
 //        game.hmtlize();
         int[][] array = new int[][]{{2,2,0,0}, {2,2,0,0}, {2,2,0,0}, {2,2,0,0}};
-        System.out.println(Arrays.deepToString(move(array, 's')));
+        System.out.println(Arrays.deepToString(move(array, 'd')));
     }
 
     public static int[][] rotate(int[][] initialArray, char direction) {
@@ -47,6 +47,7 @@ public class Main {
 
     public static int[][] move(int[][] array, char direction) {
         int[][] rotatedField;
+        char invertedDirection = 0;
         rotatedField = rotate(array, direction);
         for (int i = 0; i <= 1; i++) {
             for (int h = 0; h < array.length - 1; h++) {
@@ -61,6 +62,12 @@ public class Main {
                 }
             }
         }
-        return rotatedField;
+        switch (direction) {
+            case 'w' -> invertedDirection = 'w';
+            case 's' -> invertedDirection = 's';
+            case 'a' -> invertedDirection = 'd';
+            case 'd' -> invertedDirection = 'a';
+        }
+        return rotate(rotatedField, invertedDirection);
     }
 }

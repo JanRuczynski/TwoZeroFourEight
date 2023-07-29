@@ -31,19 +31,31 @@ public class Game {
     }
 
     private void move(char direction) {
-        int[][] rotatedField = new int[dimension][dimension];
+        int[][] rotatedField;
+        char invertedDirection = 0;
         rotatedField = rotate(gameField, direction);
-        for (int h = 0; h < dimension - 1; h++) {
-            for (int w = 0; w < dimension; w++) {
-                if (rotatedField[h][w] == rotatedField[h+1][w]) {
-                    rotatedField[h][w] = 0;
-                    rotatedField[h+1][w]*=2;
-                } else if (rotatedField[h+1][w] == 0) {
-                    rotatedField[h+1][w] = rotatedField[h][w];
-                    rotatedField[h][w] = 0;
+        for (int i = 0; i <= 1; i++) {
+            for (int h = 0; h < gameField.length - 1; h++) {
+                for (int w = 0; w < gameField.length; w++) {
+                    if (rotatedField[h][w] == rotatedField[h+1][w] && i == 0) {
+                        rotatedField[h][w] = 0;
+                        rotatedField[h+1][w]*=2;
+                    } else if (rotatedField[h+1][w] == 0) {
+                        rotatedField[h+1][w] = rotatedField[h][w];
+                        rotatedField[h][w] = 0;
+                    }
                 }
             }
         }
+        
+        switch (direction) {
+            case 'w' -> invertedDirection = 'w';
+            case 's' -> invertedDirection = 's';
+            case 'a' -> invertedDirection = 'd';
+            case 'd' -> invertedDirection = 'a';
+        }
+
+        gameField = rotate(rotatedField, invertedDirection);
     }
 
     private void addNewNumber() {
