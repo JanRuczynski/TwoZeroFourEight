@@ -5,11 +5,11 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        Game game = new Game(3);
+        Game game = new Game();
 //        game.gameField = new int[][]{{1,22,333}, {22,22,22}, {333,333,333}};
 //        game.hmtlize();
-        int[][] array = new int[][]{{2,2,0,0}, {2,2,0,0}, {2,2,0,0}, {2,2,0,0}};
-        System.out.println(Arrays.deepToString(move(array, 'd')));
+//        int[][] array = new int[][]{{0,0,0}, {0,0,0}, {0,2,0}};
+//        System.out.println(Arrays.deepToString(rotate(array, 'a')));
     }
 
     public static int[][] rotate(int[][] initialArray, char direction) {

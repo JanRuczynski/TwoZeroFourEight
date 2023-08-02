@@ -1,8 +1,11 @@
 package org.example;
 
+import com.sun.source.tree.UsesTree;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
@@ -10,8 +13,7 @@ public class Game {
     private int[][] gameField;
     private boolean gameOver;
 
-    public Game(int dimension) throws IOException {
-        this.dimension = dimension;
+    public Game() throws IOException {
         play();
     }
 
@@ -50,13 +52,17 @@ public class Game {
                 }
             }
         }
-
+        System.out.println(Arrays.deepToString(rotatedField));
         switch (direction) {
             case 'w' -> invertedDirection = 'w';
             case 's' -> invertedDirection = 's';
             case 'a' -> invertedDirection = 'd';
             case 'd' -> invertedDirection = 'a';
         }
+//        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
+//        System.out.println(direction);
+        System.out.println(invertedDirection);
+        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
 
         gameField = rotate(rotatedField, invertedDirection);
     }
@@ -124,31 +130,31 @@ public class Game {
     }
 
     private int[][] rotate(int[][] initialArray, char direction) {
-        int[][] rotatedField = new int[dimension][dimension];
+        int[][] rotatedField = new int[initialArray.length][initialArray.length];
         switch (direction) {
             case 'w' :
-                for (int h = 0; h < dimension; h++) {
-                    for (int w = 0; w < dimension; w++) {
-                        rotatedField[dimension - h - 1][dimension - w - 1] = gameField[h][w];
+                for (int h = 0; h < initialArray.length; h++) {
+                    for (int w = 0; w < initialArray.length; w++) {
+                        rotatedField[initialArray.length - h - 1][initialArray.length - w - 1] = initialArray[h][w];
                     }
                 }
                 break;
             case 'd' :
-                for (int h = 0; h < dimension; h++) {
-                    for (int w = 0; w < dimension; w++) {
-                        rotatedField[w][dimension-h-1] = gameField[h][w];
+                for (int h = 0; h < initialArray.length; h++) {
+                    for (int w = 0; w < initialArray.length; w++) {
+                        rotatedField[w][initialArray.length-h-1] = initialArray[h][w];
                     }
                 }
                 break;
             case 's' :
-                for (int h = 0; h < dimension; h++) {
-                    System.arraycopy(gameField[h], 0, rotatedField[h], 0, dimension);
+                for (int h = 0; h < initialArray.length; h++) {
+                    System.arraycopy(initialArray[h], 0, rotatedField[h], 0, initialArray.length);
                 }
                 break;
             case 'a' :
-                for (int h = 0; h < dimension; h++) {
-                    for (int w = 0; w < dimension; w++) {
-                        rotatedField[dimension-w-1][h] = gameField[h][w];
+                for (int h = 0; h < initialArray.length; h++) {
+                    for (int w = 0; w < initialArray.length; w++) {
+                        rotatedField[initialArray.length-w-1][h] = initialArray[h][w];
                     }
                 }
                 break;
