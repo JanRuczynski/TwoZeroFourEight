@@ -6,13 +6,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Matcher;
 
 public class Game {
     private int dimension;
     private int[][] gameField;
     private boolean gameOver;
-
+    int filledSquares = 0;
     public Game() throws IOException {
         play();
     }
@@ -23,16 +25,38 @@ public class Game {
         System.out.println("###   Please enter game dimension (between 2 and 8)   ###");
         dimension = Integer.parseInt(reader.readLine());
         initialize();
+        addNewNumber();
         while (!gameOver) {
-            addNewNumber();
+            if (filledSquares == dimension * dimension) {
+                gameOver();
+            }
+            System.out.println(filledSquares);
             hmtlize();
             char direction = 0;
-            while (direction != 'w' && direction != 's' && direction != 'a' && direction != 'd') {
+            String input;
+            do {
                 System.out.println("###   Please enter direction (w, s, a or d)   ###");
-                direction = reader.readLine().charAt(0);
-            }
+                input = reader.readLine();
+
+                if (!input.isEmpty()) {
+                    direction = input.charAt(0);
+                    if (direction == 'w' || direction == 's' || direction == 'a' || direction == 'd') {
+                        break;
+                    } else {
+                        System.out.println("###   wrong character entered   ###");
+                    }
+                } else {
+                    System.out.println("###   please enter w, s, a or d   ###");
+                }
+            } while (true);
             move(direction);
+            addNewNumber();
         }
+    }
+
+    private void gameOver() {
+        gameOver = true;
+        System.out.println("###   GAME OVER!   ###");
     }
 
     private void move(char direction) {
@@ -42,9 +66,10 @@ public class Game {
         for (int i = 0; i <= 1; i++) {
             for (int h = 0; h < gameField.length - 1; h++) {
                 for (int w = 0; w < gameField.length; w++) {
-                    if (rotatedField[h][w] == rotatedField[h+1][w] && i == 0) {
+                    if (rotatedField[h][w] == rotatedField[h+1][w] && i == 0 && rotatedField[h][w] != 0) {
                         rotatedField[h][w] = 0;
                         rotatedField[h+1][w]*=2;
+                        filledSquares--;
                     } else if (rotatedField[h+1][w] == 0) {
                         rotatedField[h+1][w] = rotatedField[h][w];
                         rotatedField[h][w] = 0;
@@ -52,7 +77,7 @@ public class Game {
                 }
             }
         }
-        System.out.println(Arrays.deepToString(rotatedField));
+//        System.out.println(Arrays.deepToString(rotatedField));
         switch (direction) {
             case 'w' -> invertedDirection = 'w';
             case 's' -> invertedDirection = 's';
@@ -61,8 +86,8 @@ public class Game {
         }
 //        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
 //        System.out.println(direction);
-        System.out.println(invertedDirection);
-        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
+//        System.out.println(invertedDirection);
+//        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
 
         gameField = rotate(rotatedField, invertedDirection);
     }
@@ -75,11 +100,14 @@ public class Game {
             addedNumber = 4;
         }
         while (!isSet) {
-            int randX = random.nextInt(1, dimension) - 1;
-            int randY = random.nextInt(1, dimension) - 1;
+            int randX = random.nextInt(1, dimension + 1) - 1;
+            int randY = random.nextInt(1, dimension + 1) - 1;
             if (gameField[randY][randX] == 0) {
                 gameField[randY][randX] = addedNumber;
+                filledSquares++;
                 isSet = true;
+            } else {
+                System.out.println("cant find empty space");
             }
         }
     }
