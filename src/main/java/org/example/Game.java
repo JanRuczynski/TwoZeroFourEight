@@ -1,14 +1,9 @@
 package org.example;
 
-import com.sun.source.tree.UsesTree;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Random;
-import java.util.regex.Matcher;
 
 public class Game {
     private int dimension;
@@ -16,6 +11,7 @@ public class Game {
     private boolean gameOver;
     int filledSquares = 0;
     int score = 0;
+    final int WINNING_NUMBER = 2048;
     public Game() throws IOException {
         play();
     }
@@ -31,7 +27,6 @@ public class Game {
             if (filledSquares == dimension * dimension) {
                 gameOver();
             }
-//            System.out.println(filledSquares);
             hmtlize();
             char direction = 0;
             String input;
@@ -57,7 +52,7 @@ public class Game {
 
     private void gameOver() {
         gameOver = true;
-        System.out.println("###   GAME OVER!   ###");
+        System.out.println("\n###   GAME OVER!   ###\n");
     }
 
     private void move(char direction) {
@@ -72,6 +67,9 @@ public class Game {
                         rotatedField[h+1][w]*=2;
                         score += rotatedField[h+1][w];
                         filledSquares--;
+                        if (rotatedField[h+1][w] == WINNING_NUMBER) {
+                            win();
+                        }
                     } else if (rotatedField[h+1][w] == 0) {
                         rotatedField[h+1][w] = rotatedField[h][w];
                         rotatedField[h][w] = 0;
@@ -79,19 +77,18 @@ public class Game {
                 }
             }
         }
-//        System.out.println(Arrays.deepToString(rotatedField));
         switch (direction) {
             case 'w' -> invertedDirection = 'w';
             case 's' -> invertedDirection = 's';
             case 'a' -> invertedDirection = 'd';
             case 'd' -> invertedDirection = 'a';
         }
-//        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
-//        System.out.println(direction);
-//        System.out.println(invertedDirection);
-//        System.out.println(Arrays.deepToString(rotate(rotatedField, invertedDirection)));
 
         gameField = rotate(rotatedField, invertedDirection);
+    }
+
+    private void win() {
+        System.out.println("\n###   YOU WON!   ###\n");
     }
 
     private void addNewNumber() {
@@ -108,8 +105,6 @@ public class Game {
                 gameField[randY][randX] = addedNumber;
                 filledSquares++;
                 isSet = true;
-            } else {
-                System.out.println("cant find empty space");
             }
         }
     }
